@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace UserApi.Models;
 
 [Table("Users")]
+[Index(nameof(Email), IsUnique = true)]
 public class User
 {
     // Primary key auto-increment
@@ -33,9 +35,9 @@ public class User
     public int Age { get; set; }
 
     // ngày tạo
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     // ngày cập nhật
-    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     // xóa mềm
     public bool Deleted { get; set; } = false;

@@ -22,5 +22,10 @@ namespace UserApi.Data
         //     optionsBuilder.UseSqlServer(connectionString);
         // } 
         public DbSet<User> Users { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            UserSeedData.Seed(modelBuilder);
+        }
     }
 }

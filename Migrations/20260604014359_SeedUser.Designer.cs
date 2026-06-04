@@ -12,8 +12,8 @@ using UserApi.Data;
 namespace UserApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260526094224_init")]
-    partial class init
+    [Migration("20260604014359_SeedUser")]
+    partial class SeedUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,6 +60,9 @@ namespace UserApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Users");
 
                     b.HasData(
@@ -67,56 +70,34 @@ namespace UserApi.Migrations
                         {
                             Id = 1,
                             Age = 30,
-                            CreatedAt = new DateTime(2026, 5, 26, 16, 42, 22, 525, DateTimeKind.Local).AddTicks(6745),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Deleted = false,
-                            Description = "Người dùng mẫu",
-                            Email = "nguyenvana@example.com",
-                            Name = "Nguyen Van A",
-                            UpdatedAt = new DateTime(2026, 5, 26, 16, 42, 22, 525, DateTimeKind.Local).AddTicks(7081)
+                            Description = "A sample user",
+                            Email = "john.doe@example.com",
+                            Name = "John Doe",
+                            UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 2,
                             Age = 25,
-                            CreatedAt = new DateTime(2026, 5, 26, 16, 42, 22, 525, DateTimeKind.Local).AddTicks(7705),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Deleted = false,
-                            Description = "Dữ liệu mẫu thứ hai",
-                            Email = "tranthib@example.com",
-                            Name = "Tran Thi B",
-                            UpdatedAt = new DateTime(2026, 5, 26, 16, 42, 22, 525, DateTimeKind.Local).AddTicks(7705)
+                            Description = "Another sample user",
+                            Email = "jane.smith@example.com",
+                            Name = "Jane Smith",
+                            UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 3,
                             Age = 35,
-                            CreatedAt = new DateTime(2026, 5, 26, 16, 42, 22, 525, DateTimeKind.Local).AddTicks(7707),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Deleted = false,
-                            Description = "Dữ liệu mẫu thứ ba",
-                            Email = "levanc@example.com",
-                            Name = "Le Van C",
-                            UpdatedAt = new DateTime(2026, 5, 26, 16, 42, 22, 525, DateTimeKind.Local).AddTicks(7708)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Age = 28,
-                            CreatedAt = new DateTime(2026, 5, 26, 16, 42, 22, 525, DateTimeKind.Local).AddTicks(7709),
-                            Deleted = false,
-                            Description = "Dữ liệu mẫu thứ tư",
-                            Email = "phamthid@example.com",
-                            Name = "Pham Thi D",
-                            UpdatedAt = new DateTime(2026, 5, 26, 16, 42, 22, 525, DateTimeKind.Local).AddTicks(7710)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Age = 32,
-                            CreatedAt = new DateTime(2026, 5, 26, 16, 42, 22, 525, DateTimeKind.Local).AddTicks(7712),
-                            Deleted = false,
-                            Description = "Dữ liệu mẫu thứ năm",
-                            Email = "hoangvane@example.com",
-                            Name = "Hoang Van E",
-                            UpdatedAt = new DateTime(2026, 5, 26, 16, 42, 22, 525, DateTimeKind.Local).AddTicks(7712)
+                            Description = "Yet another sample user",
+                            Email = "bob.johnson@example.com",
+                            Name = "Bob Johnson",
+                            UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 #pragma warning restore 612, 618
