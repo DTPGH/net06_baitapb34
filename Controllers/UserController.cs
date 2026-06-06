@@ -23,7 +23,7 @@ namespace UserApi.Controllers
 
         // GET: api/User
         //lấy danh sách trong bảng User: Có lọc Deleted, paging, sorting và searching hoạt động đúng.
-        [HttpGet("get-all")]
+        [HttpGet("")]
         public async Task<ActionResult<ApiResponse<PageResult<User>>>> GetAll([FromQuery] UserQueryParameters queryParameters)
         {
 
@@ -117,5 +117,33 @@ namespace UserApi.Controllers
             return Ok(response);
         }
 
+        // Lấy thông tin user chi tiết theo Id. Nếu không tìm thấy hoặc User đã bị xóa mềm thì trả về thông báo lỗi rõ ràng.
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<ApiResponse<User>>> GetUserById( int id)
+        {
+            var user = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+            {
+                return NotFound(
+                    new ApiResponse<User>
+                    {
+                        StatusCode = StatusCodes.Status404NotFound,
+                        Message = $"Not found a user with id: {id} in database ",
+                        Content = null
+                    }
+                );
+            }
+
+            return Ok(new ApiResponse<User>
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Get detail information user by id successfully",
+                Content = user
+            });
+
+        }
     }
 }
