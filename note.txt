@@ -1,0 +1,4 @@
+Trường hợp thêm dữ liệu mới thông qua API: 
+- ID tự sinh và tự nhảy số mà trước đó dòng dữ liệu với id cuối là 3.
+- Sau khi thêm dữ liệu mới thì ID tăng lên 1001
+--> Giải quyết vấn đề: vào db xóa thẳng dữ liệu vừa thêm -> reset identity với lệnh DBCC CHECKIDENT ('Users', RESEED, 3)

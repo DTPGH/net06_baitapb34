@@ -119,7 +119,7 @@ namespace UserApi.Controllers
 
         // Lấy thông tin user chi tiết theo Id. Nếu không tìm thấy hoặc User đã bị xóa mềm thì trả về thông báo lỗi rõ ràng.
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<ApiResponse<User>>> GetUserById( int id)
+        public async Task<ActionResult<ApiResponse<User>>> GetUserById(int id)
         {
             var user = await _context.Users
                 .AsNoTracking()
@@ -145,5 +145,57 @@ namespace UserApi.Controllers
             });
 
         }
+
+        // POST: api/use
+        // THêm mới user
+        [HttpPost]
+        public async Task<ActionResult> CreateUser([FromBody] CreateUserRequest request)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "Dữ liệu đầu vào không hợp lệ",
+                    Content = ModelState
+                });
+            }
+
+            //nếu muốn email là duy nhất thì cần kiểm tra email trùng
+            var emailExists = await _context.Users
+                .AnyAsync(u => u.Email == request.Email && u.Deleted==false);
+
+            if (emailExists)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "Email này đã tồn tại ",
+                    Content = null 
+                });
+            }
+
+            var user = new User
+            {
+                Name = request.Name,
+                Email = request.Email,
+                Age = request.Age,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                Deleted = false
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse<User>
+            {
+               StatusCode = StatusCodes.Status200OK,
+               Message = "Tạo user mới thành công",
+               Content = user 
+            });
+
+        }
+
     }
 }
