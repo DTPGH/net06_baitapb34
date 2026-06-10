@@ -163,7 +163,7 @@ namespace UserApi.Controllers
 
             //nếu muốn email là duy nhất thì cần kiểm tra email trùng
             var emailExists = await _context.Users
-                .AnyAsync(u => u.Email == request.Email && u.Deleted==false);
+                .AnyAsync(u => u.Email == request.Email && u.Deleted == false);
 
             if (emailExists)
             {
@@ -171,7 +171,7 @@ namespace UserApi.Controllers
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "Email này đã tồn tại ",
-                    Content = null 
+                    Content = null
                 });
             }
 
@@ -190,12 +190,70 @@ namespace UserApi.Controllers
 
             return Ok(new ApiResponse<User>
             {
-               StatusCode = StatusCodes.Status200OK,
-               Message = "Tạo user mới thành công",
-               Content = user 
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Tạo user mới thành công",
+                Content = user
             });
-
         }
 
+        // PUT: api/user/1
+        // Cập nhật user theo id 
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<ApiResponse<User>>> UpdateUser([FromRoute] int id, [FromBody] UpdateUserRequest request)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "Dữ liệu cập nhật không hợp lệ",
+                    Content = ModelState
+                });
+            }
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Id == id & u.Deleted == false);
+
+            if (user == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = "Không tìm thấy user cần cập nhật",
+                    Content = null
+                });
+            }
+
+            var emailExists = await _context.Users
+                .AnyAsync(
+                    e => e.Email == request.Email &&
+                    e.Id != id &&
+                    !e.Deleted
+                    );
+
+            if (emailExists)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "Email này đã tồn tại",
+                    Content = null
+                });
+            }
+
+            user.Name = request.Name;
+            user.Email = request.Email;
+            user.Description = request.Description;
+            user.Age = request.Age;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return Ok(new ApiResponse<User>
+            {
+               StatusCode = StatusCodes.Status200OK,
+               Message = "Cập nhật user thành công",
+               Content = user 
+            });
+        }
     }
 }
